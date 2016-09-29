@@ -32,10 +32,6 @@ func (p Printer) Reverse(b bool) error {
 	return p.toggleSetting([]byte{esc, 'B'}, 255, 0, b)
 }
 
-func (p Printer) Cut() error {
-	return p.write([]byte{esc, 'i'})
-}
-
 type Justification byte
 
 var Left Justification = 0
