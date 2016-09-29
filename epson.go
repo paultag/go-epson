@@ -4,6 +4,10 @@ import (
 	"io"
 )
 
+func New(w io.WriteCloser) Printer {
+	return Printer{writer: w}
+}
+
 type Printer struct {
 	writer io.WriteCloser
 }
