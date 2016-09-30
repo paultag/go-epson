@@ -51,17 +51,5 @@ func (p Printer) ReverseFeed(lines uint8) error {
 }
 
 func (p Printer) Cut() error {
-	return p.write([]byte{esc, 'V', 0})
-}
-
-func (p Printer) PartialCut() error {
-	return p.write([]byte{esc, 'V', 1})
-}
-
-func (p Printer) FeedAndCut(lines uint8) error {
-	return p.write([]byte{esc, 'V', 65, lines})
-}
-
-func (p Printer) FeedAndPartialCut(lines uint8) error {
-	return p.write([]byte{esc, 'V', 66, lines})
+	return p.write([]byte{esc, 'i'})
 }

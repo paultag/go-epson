@@ -1,37 +1,52 @@
 package main
 
 import (
-	// "net"
-	"os"
+	"net"
+	// "os"
 
 	"pault.ag/go/epson"
 )
 
 func main() {
-	// conn, err := net.Dial("tcp", "printer.paultag.house:9100")
-	// if err != nil {
-	// 	panic(err)
-	// }
+	conn, err := net.Dial("tcp", "host.domain.fqdn:port")
+	if err != nil {
+		panic(err)
+	}
+	printer := epson.New(conn)
 
-	printer := epson.New(os.Stdout)
+	// printer := epson.New(os.Stdout)
+
 	if err := printer.Init(); err != nil {
 		panic(err)
 	}
 
-	printer.Feed(3)
-	printer.Justification(epson.Center)
-	printer.Write([]byte("P A U L T A G"))
-	printer.Feed(1)
 	printer.Justification(epson.Left)
-	printer.Write([]byte(`
- ____________________________
-< this is a test, of course! >
- ----------------------------
-        \   ^__^
-         \  (oo)\_______
-            (__)\       )\/\
-                ||----w |
-                ||     ||
-`))
-	printer.FeedAndPartialCut(3)
+	printer.Write([]byte("Left Aligned\n"))
+
+	printer.Justification(epson.Right)
+	printer.Write([]byte("Right Aligned\n"))
+
+	printer.Justification(epson.Center)
+	printer.Write([]byte("Center Aligned\n"))
+
+	printer.Justification(epson.Left)
+
+	printer.Underline(true)
+	printer.Write([]byte("Underlined\n"))
+	printer.Underline(false)
+
+	printer.Emphasize(true)
+	printer.Write([]byte("Emphasize\n"))
+	printer.Emphasize(false)
+
+	printer.DoubleStrike(true)
+	printer.Write([]byte("Double Strike\n"))
+	printer.DoubleStrike(false)
+
+	printer.Reverse(true)
+	printer.Write([]byte("Reverse\n"))
+	printer.Reverse(false)
+
+	printer.Feed(5)
+	printer.Cut()
 }
