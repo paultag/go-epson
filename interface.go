@@ -1,6 +1,5 @@
 package epson
 
-// A Printer is an io.WriteCloser with some additional bits.
 type Printer interface {
 	Init() error
 	Underline(bool) error
@@ -11,5 +10,4 @@ type Printer interface {
 	Cut() error
 
 	Write([]byte) (int, error)
-	Close() error
 }

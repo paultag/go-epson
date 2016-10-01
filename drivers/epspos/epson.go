@@ -9,18 +9,18 @@ import (
 type EPSPOS struct {
 	epson.Printer
 
-	writer io.WriteCloser
+	writer io.Writer
 }
 
 // New {{{
 
-func New(w io.WriteCloser) EPSPOS {
+func New(w io.Writer) EPSPOS {
 	return EPSPOS{writer: w}
 }
 
 // }}}
 
-// WriterCloser {{{
+// Writer {{{
 
 func (p EPSPOS) Write(b []byte) (int, error) {
 	return p.writer.Write(b)
@@ -29,10 +29,6 @@ func (p EPSPOS) Write(b []byte) (int, error) {
 func (p EPSPOS) write(b []byte) error {
 	_, err := p.Write(b)
 	return err
-}
-
-func (p EPSPOS) Close() error {
-	return p.writer.Close()
 }
 
 // }}}
