@@ -1,7 +1,6 @@
 package epspos
 
 import (
-	"fmt"
 	"image"
 )
 
