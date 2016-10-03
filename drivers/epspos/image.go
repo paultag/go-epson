@@ -1,7 +1,9 @@
 package epspos
 
 import (
+	"fmt"
 	"image"
+	"math"
 )
 
 func uint16Touint8s(x uint16) (uint8, uint8) {
@@ -9,19 +11,33 @@ func uint16Touint8s(x uint16) (uint8, uint8) {
 }
 
 func (e EPSPOS) PrintImage(img image.Gray) error {
-	var width uint16 = uint16(img.Rect.Max.X)
-	var height uint16 = uint16(img.Rect.Max.Y)
-	w1, w2 := uint16Touint8s(width / 8)
+	bounds := img.Bounds()
+
+	if bounds.Max.X > math.MaxUint16 || bounds.Max.Y > math.MaxUint16 {
+		return fmt.Errorf("Image is too big for a uint16")
+	}
+
+	var width uint16 = uint16(bounds.Max.X)
+	var height uint16 = uint16(bounds.Max.Y)
+	var widthBytes uint16 = ((width + 7) >> 3)
+
+	w1, w2 := uint16Touint8s(widthBytes)
 	h1, h2 := uint16Touint8s(height)
 
-	imageBuffer := make([]byte, (width/8)*height)
+	imageBufferSize := (uint32(widthBytes) * uint32(height))
+	imageBuffer := make([]byte, imageBufferSize)
 
-	for i, pixel := range img.Pix {
-		index := i / 8
-		imageBuffer[index] = imageBuffer[index] << 1
+	for y := 0; y < int(height); y++ {
+		for x := 0; x < int(width); x++ {
+			index := (int(widthBytes) * y) + (x / 8)
+			pixel := img.Pix[(img.Stride*y)+x]
 
-		if pixel <= 128 {
-			imageBuffer[index] |= 0x01
+			// fmt.Printf("x=%d y=%d i=%d height=%d lim=%d\n", x, y, index, height, imageBufferSize)
+			imageBuffer[index] = imageBuffer[index] << 1
+
+			if pixel <= 128 {
+				imageBuffer[index] |= 0x01
+			}
 		}
 	}
 
