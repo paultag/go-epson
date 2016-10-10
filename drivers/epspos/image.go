@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"image"
 	"math"
+	"time"
 )
 
 func uint16Touint8s(x uint16) (uint8, uint8) {
@@ -24,17 +25,13 @@ func graySubImage(p image.Gray, r image.Rectangle) image.Gray {
 }
 
 func (e EPSPOS) PrintImage(img image.Gray) error {
+	time.Sleep(1)
 	bounds := img.Bounds()
-	if bounds.Max.X != 512 {
-		return fmt.Errorf("Please pass 512px wide images. This is buggy behavior. Complain to Paul.")
-	}
-
 	if bounds.Max.Y > 1024 {
 		/* If it's an overlarge image, let's split it and recurse */
-
 		if err := e.printImage(graySubImage(img, image.Rectangle{
 			Min: image.Point{X: 0, Y: 0},
-			Max: image.Point{X: 512, Y: 1024},
+			Max: image.Point{X: bounds.Max.X, Y: 1024},
 		})); err != nil {
 			return err
 		}
@@ -59,7 +56,7 @@ func (e EPSPOS) printImage(img image.Gray) error {
 	var height uint16 = uint16(bounds.Max.Y)
 	var widthBytes uint16 = ((width + 7) >> 3)
 
-	if height >= 1024 {
+	if height > 1024 {
 		/* XXX: This is actually wrong, and someone's going to stub their toe
 		*       on this one, likely me. So, future Paul, here's what's up here:
 		*
