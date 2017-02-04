@@ -10,7 +10,6 @@ import (
 	"os"
 
 	"pault.ag/go/epson"
-	"pault.ag/go/epson/drivers/epspos"
 )
 
 func main() {
@@ -18,7 +17,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	printer := epspos.New(conn)
+	printer := epson.New(conn)
 
 	for _, file := range os.Args[2:] {
 		infile, err := os.Open(file)

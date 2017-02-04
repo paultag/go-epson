@@ -1,14 +1,10 @@
-package epspos
+package epson
 
 import (
 	"io"
-
-	"pault.ag/go/epson"
 )
 
 type EPSPOS struct {
-	epson.Printer
-
 	writer io.Writer
 }
 
@@ -93,7 +89,7 @@ func (p EPSPOS) Reverse(b bool) error {
 
 // Justification {{{
 
-func (p EPSPOS) Justification(justification epson.Justification) error {
+func (p EPSPOS) Justification(justification Justification) error {
 	return p.write([]byte{esc, 'a', byte(justification)})
 }
 

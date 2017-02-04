@@ -1,4 +1,4 @@
-package epspos
+package epson
 
 import (
 	"fmt"
